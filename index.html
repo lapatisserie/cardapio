@@ -184,12 +184,10 @@
                     <textarea id="cake-obs" rows="3" placeholder="Ex: Tema, cores preferidas, detalhes..."></textarea>
                 </div>
 
-                <div class="price-summary">
-                    <span>Total Estimado:</span>
-                    <strong id="cake-live-price">R$ 0,00</strong>
+                <div class="sticky-footer">
+                    <button type="button" class="btn-primary btn-disabled" id="btn-add-cake" onclick="addCakeToCart()">Adicionar: <span id="cake-live-price">R$ 0,00</span></button>
+                    <p class="price-disclaimer">* O valor pode sofrer alterações e está sujeito à confirmação.</p>
                 </div>
-
-                <button type="button" class="btn-primary" onclick="addCakeToCart()">Adicionar ao Carrinho</button>
             </form>
         </div>
     </div>
@@ -258,11 +256,10 @@
                     <label>Observações Adicionais (Decoração, Cores, etc)</label>
                     <textarea id="andar-obs" rows="3" placeholder="Descreva como deseja o bolo..."></textarea>
                 </div>
-                <div class="price-summary">
-                    <span>Total Estimado:</span>
-                    <strong id="andar-live-price">R$ 350,00</strong>
+                <div class="sticky-footer">
+                    <button type="button" class="btn-primary btn-disabled" id="btn-add-andar" onclick="addAndarToCart()">Adicionar: <span id="andar-live-price">R$ 350,00</span></button>
+                    <p class="price-disclaimer">* O valor pode sofrer alterações e está sujeito à confirmação.</p>
                 </div>
-                <button type="button" class="btn-primary" onclick="addAndarToCart()">Adicionar ao Carrinho</button>
             </form>
         </div>
     </div>
@@ -562,6 +559,7 @@
                     <span id="cart-final-total">R$ 0,00</span>
                 </div>
             </div>
+            <p class="price-disclaimer">* O valor total pode sofrer pequenas alterações e está sujeito à confirmação no WhatsApp.</p>
             
             <div class="form-group" style="margin-top: 20px;">
                 <label>Seu Nome</label>

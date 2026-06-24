@@ -38,7 +38,10 @@ const prices = {
 let cart = [];
 
 function openModal(modalId) {
-    document.getElementById(modalId + '-modal').style.display = 'block';
+    const modalEl = document.getElementById(modalId + '-modal');
+    modalEl.style.display = 'block';
+    modalEl.scrollTo({ top: 0 });
+    
     if(modalId === 'custom-cake') {
         renderAdicionais();
         updateCakePrice();
@@ -197,6 +200,24 @@ function calculateCakePrice() {
     return total;
 }
 
+function checkCakeValidity() {
+    const typeEl = document.querySelector('input[name="cakeType"]:checked');
+    const sizeEl = document.querySelector('input[name="size"]:checked');
+    const massaEl = document.querySelector('input[name="massa"]:checked');
+    const maisCor = document.querySelector('input[name="mais_cor"]:checked');
+    const detalhesArtesanais = document.querySelector('input[name="detalhes_artesanais"]:checked');
+    const recheios = document.querySelectorAll('input[name="recheio"]:checked');
+    
+    const btn = document.getElementById('btn-add-cake');
+    if (!btn) return;
+
+    if (typeEl && sizeEl && massaEl && recheios.length > 0 && maisCor && detalhesArtesanais) {
+        btn.classList.remove('btn-disabled');
+    } else {
+        btn.classList.add('btn-disabled');
+    }
+}
+
 function updateCakePrice() {
     // Re-validate Premium with PP
     const sizeEl = document.querySelector('input[name="size"]:checked');
@@ -210,6 +231,7 @@ function updateCakePrice() {
 
     const price = calculateCakePrice();
     document.getElementById('cake-live-price').innerText = `R$ ${price.toFixed(2).replace('.', ',')}`;
+    checkCakeValidity();
 }
 
 // Helper: scroll to the first missing required field inside the modal
@@ -263,15 +285,15 @@ function scrollToError(fieldName, message) {
         modal.scrollTo({ top: groupTop, behavior: 'smooth' });
     }
 
-    // Auto-remove error state after 3 seconds, fading out over 0.5s
-    setTimeout(() => {
-        group.classList.add('fading');
-        msg.classList.add('fading');
-        setTimeout(() => {
-            group.classList.remove('field-error', 'fading');
-            msg.remove();
-        }, 500);
-    }, 3000);
+    // Clear error state when the user interacts with this group
+    const clearError = () => {
+        group.classList.remove('field-error', 'fading');
+        if (msg && msg.parentNode) msg.remove();
+        group.removeEventListener('change', clearError);
+        group.removeEventListener('input', clearError);
+    };
+    group.addEventListener('change', clearError);
+    group.addEventListener('input', clearError);
 }
 
 function addCakeToCart() {
@@ -354,10 +376,26 @@ function renderAndarAdicionais() {
     }
 }
 
+function checkAndarValidity() {
+    const sizeEl = document.querySelector('input[name="andar_size"]:checked');
+    const massaEl = document.querySelector('input[name="andar_massa"]:checked');
+    const recheios = document.querySelectorAll('input[name="andar_recheio"]:checked');
+    
+    const btn = document.getElementById('btn-add-andar');
+    if (!btn) return;
+
+    if (sizeEl && massaEl && recheios.length > 0) {
+        btn.classList.remove('btn-disabled');
+    } else {
+        btn.classList.add('btn-disabled');
+    }
+}
+
 function updateAndarPrice() {
     const sizeEl = document.querySelector('input[name="andar_size"]:checked');
     if (!sizeEl) {
         document.getElementById('andar-live-price').innerText = `R$ 0,00`;
+        checkAndarValidity();
         return;
     }
     
@@ -402,6 +440,7 @@ function updateAndarPrice() {
     }
     
     document.getElementById('andar-live-price').innerText = `R$ ${price.toFixed(2).replace('.', ',')}`;
+    checkAndarValidity();
 }
 
 function handleAndarRecheio(checkbox) {
