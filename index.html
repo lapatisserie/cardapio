@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Pâtisserie - Encomendas</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <h1>La Pâtisserie</h1>
+            <p>DOCES ARTESANAIS</p>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <section class="banner">
+            <h2>Cardápio 2026</h2>
+            <p>Por Barbára</p>
+        </section>
+
+        <section class="menu-categories">
+            <h3>Faça sua Encomenda</h3>
+            <div class="product-cards">
+                <div class="card" onclick="openModal('custom-cake')">
+                    <img src="pics/montar bolo personalizado.jpeg" alt="Bolo Personalizado" style="object-position: center 20%;">
+                    <div class="card-content">
+                        <h4>Montar Bolo Personalizado</h4>
+                        <p>Escolha tamanho, massa e recheios para o seu bolo personalizado.</p>
+                        <span class="btn-sm">Montar Agora</span>
+                    </div>
+                </div>
+
+                <div class="card" onclick="openModal('andar')">
+                    <img src="pics/bolo de dois andares .jpeg" alt="Bolo de Andar">
+                    <div class="card-content">
+                        <h4>Bolo de Andar</h4>
+                        <p>Bolo estruturado de 2 andares, ideal para eventos maiores.</p>
+                        <span class="btn-sm">Escolher</span>
+                    </div>
+                </div>
+
+                <div class="card" onclick="openModal('doces')">
+                    <img src="pics/doces.jpeg" alt="Doces">
+                    <div class="card-content">
+                        <h4>Doces</h4>
+                        <p>Brigadeiros, bem-casados, surpresa de uva, modelados e mais.</p>
+                        <span class="btn-sm">Ver Opções</span>
+                    </div>
+                </div>
+
+                <div class="card" onclick="openModal('populares')">
+                    <img src="pics/bolo vintage .jpeg" alt="Mais Pedidos">
+                    <div class="card-content">
+                        <h4>Mais Pedidos</h4>
+                        <p>Nossas combinações favoritas, já prontas para você pedir.</p>
+                        <span class="btn-sm">Ver Favoritos</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="info-section" style="margin-top: 40px;">
+            <h3>Informações Importantes</h3>
+            <ul>
+                <li><strong>Encomendas:</strong> Mínimo de 3 dias de antecedência.</li>
+                <li><strong>Pagamento:</strong> 50% na confirmação, 50% na retirada (PIX, Crédito, Débito).</li>
+                <li><strong>Retiradas:</strong> Rua João Dias Martins, 110, Boa Viagem. (Não entregamos, mas aceitamos Uber Flash).</li>
+            </ul>
+        </section>
+    </main>
+
+    <!-- Cart Floating Bar -->
+    <div id="cart-bar" class="hidden">
+        <div class="cart-info">
+            <span id="cart-count">0 itens</span>
+            <span id="cart-total">R$ 0,00</span>
+        </div>
+        <button onclick="openCartModal()">Ver Carrinho</button>
+    </div>
+
+    <!-- Modals -->
+    <!-- Custom Cake Modal -->
+    <div id="custom-cake-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('custom-cake-modal')">&times;</span>
+            <h2>Montar Bolo Personalizado</h2>
+            <form id="cake-form">
+                
+                <div class="form-group">
+                    <label>Tipo de Bolo (Obrigatório)</label>
+                    <div class="options-grid">
+                        <label class="radio-card"><input type="radio" name="cakeType" value="Chantilly"> Bolo de Chantilly</label>
+                        <label class="radio-card"><input type="radio" name="cakeType" value="Naked Cake"> Naked Cake</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Tamanho (Obrigatório)</label>
+                    <div class="options-grid">
+                        <label class="radio-card"><input type="radio" name="size" value="PP" onchange="updateCakePrice()"> PP (500g, 5 fatias)</label>
+                        <label class="radio-card"><input type="radio" name="size" value="P" onchange="updateCakePrice()"> P (1,5kg, 10-15 fatias)</label>
+                        <label class="radio-card"><input type="radio" name="size" value="M" onchange="updateCakePrice()"> M (2,5kg, 20-25 fatias)</label>
+                        <label class="radio-card"><input type="radio" name="size" value="G" onchange="updateCakePrice()"> G (3,5kg, 30-35 fatias)</label>
+                        <label class="radio-card"><input type="radio" name="size" value="GG" onchange="updateCakePrice()"> GG (4,5kg, 40-45 fatias)</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Massa (Obrigatório)</label>
+                    <div class="options-grid">
+                        <label class="radio-card"><input type="radio" name="massa" value="Chocolate"> Chocolate</label>
+                        <label class="radio-card"><input type="radio" name="massa" value="Baunilha"> Baunilha</label>
+                        <label class="radio-card"><input type="radio" name="massa" value="Red Velvet"> Red Velvet</label>
+                        <label class="radio-card"><input type="radio" name="massa" value="Limão"> Limão</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Recheios (Escolha até 2) (Obrigatório)</label>
+                    <p class="hint">O valor do bolo será baseado no recheio de maior categoria.</p>
+                    
+                    <div class="recheio-category">
+                        <h5>Tradicionais</h5>
+                        <div class="options-grid">
+                            <label><input type="checkbox" name="recheio" value="Chocolate" data-category="Tradicional" onchange="handleRecheioLimit(this)"> Chocolate</label>
+                            <label><input type="checkbox" name="recheio" value="Bem-casado" data-category="Tradicional" onchange="handleRecheioLimit(this)"> Bem-casado</label>
+                            <label><input type="checkbox" name="recheio" value="Brigadeiro branco" data-category="Tradicional" onchange="handleRecheioLimit(this)"> Brigadeiro branco</label>
+                            <label><input type="checkbox" name="recheio" value="Limão" data-category="Tradicional" onchange="handleRecheioLimit(this)"> Limão</label>
+                            <label><input type="checkbox" name="recheio" value="Coco" data-category="Tradicional" onchange="handleRecheioLimit(this)"> Coco</label>
+                            <label><input type="checkbox" name="recheio" value="Paçoca" data-category="Tradicional" onchange="handleRecheioLimit(this)"> Paçoca</label>
+                        </div>
+                    </div>
+
+                    <div class="recheio-category">
+                        <h5>Especiais</h5>
+                        <div class="options-grid">
+                            <label><input type="checkbox" name="recheio" value="Ninho" data-category="Especial" onchange="handleRecheioLimit(this)"> Ninho</label>
+                            <label><input type="checkbox" name="recheio" value="Doce de leite" data-category="Especial" onchange="handleRecheioLimit(this)"> Doce de leite</label>
+                            <label><input type="checkbox" name="recheio" value="Limão siciliano" data-category="Especial" onchange="handleRecheioLimit(this)"> Limão siciliano</label>
+                            <label><input type="checkbox" name="recheio" value="Maracujá" data-category="Especial" onchange="handleRecheioLimit(this)"> Maracujá</label>
+                        </div>
+                    </div>
+
+                    <div class="recheio-category">
+                        <h5>Premium <small>(Não disponível para PP)</small></h5>
+                        <div class="options-grid">
+                            <label><input type="checkbox" name="recheio" value="Pistache" data-category="Premium" onchange="handleRecheioLimit(this)"> Pistache</label>
+                            <label><input type="checkbox" name="recheio" value="Ninho com Nutella" data-category="Premium" onchange="handleRecheioLimit(this)"> Ninho com Nutella</label>
+                            <label><input type="checkbox" name="recheio" value="Cream cheese com frutas vermelhas" data-category="Premium" onchange="handleRecheioLimit(this)"> Cream cheese + Frutas Vermelhas</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Seu bolo terá mais de uma cor? (Obrigatório)</label>
+                    <div class="options-grid">
+                        <label class="radio-card"><input type="radio" name="mais_cor" value="Sim" onchange="updateCakePrice()"> Sim</label>
+                        <label class="radio-card"><input type="radio" name="mais_cor" value="Não" onchange="updateCakePrice()"> Não</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Seu bolo terá detalhes artesanais? (ex: flores, estrelas, etc) (Obrigatório)</label>
+                    <div class="options-grid">
+                        <label class="radio-card"><input type="radio" name="detalhes_artesanais" value="Sim" onchange="updateCakePrice()"> Sim</label>
+                        <label class="radio-card"><input type="radio" name="detalhes_artesanais" value="Não" onchange="updateCakePrice()"> Não</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Adicionais</label>
+                    <div class="options-grid" id="adicionais-container">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label>Observações Adicionais</label>
+                    <textarea id="cake-obs" rows="3" placeholder="Ex: Tema, cores preferidas, detalhes..."></textarea>
+                </div>
+
+                <div class="price-summary">
+                    <span>Total Estimado:</span>
+                    <strong id="cake-live-price">R$ 0,00</strong>
+                </div>
+
+                <button type="button" class="btn-primary" onclick="addCakeToCart()">Adicionar ao Carrinho</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bolo Andar Modal -->
+    <div id="andar-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('andar-modal')">&times;</span>
+            <h2>Bolo de Andar</h2>
+            <form id="andar-form">
+                <div class="form-group">
+                    <label>Tamanho (Obrigatório)</label>
+                    <div class="options-grid">
+                        <label class="radio-card"><input type="radio" name="andar_size" value="4kg" onchange="updateAndarPrice()"> 4kg</label>
+                        <label class="radio-card"><input type="radio" name="andar_size" value="5kg" onchange="updateAndarPrice()"> 5kg</label>
+                        <label class="radio-card"><input type="radio" name="andar_size" value="Falso M" onchange="updateAndarPrice()"> Falso M</label>
+                        <label class="radio-card"><input type="radio" name="andar_size" value="Falso G" onchange="updateAndarPrice()"> Falso G</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Massa (Obrigatório)</label>
+                    <div class="options-grid">
+                        <label class="radio-card"><input type="radio" name="andar_massa" value="Chocolate"> Chocolate</label>
+                        <label class="radio-card"><input type="radio" name="andar_massa" value="Baunilha"> Baunilha</label>
+                        <label class="radio-card"><input type="radio" name="andar_massa" value="Red Velvet"> Red Velvet</label>
+                        <label class="radio-card"><input type="radio" name="andar_massa" value="Limão"> Limão</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Recheios (Escolha até 2) (Obrigatório)</label>
+                    <p class="hint">O valor será baseado na categoria mais alta escolhida.</p>
+                    
+                    <div class="recheio-category">
+                        <h5>Tradicionais</h5>
+                        <div class="options-grid">
+                            <label><input type="checkbox" name="andar_recheio" value="Chocolate" data-category="Tradicional" onchange="handleAndarRecheio(this)"> Chocolate</label>
+                            <label><input type="checkbox" name="andar_recheio" value="Bem-casado" data-category="Tradicional" onchange="handleAndarRecheio(this)"> Bem-casado</label>
+                            <label><input type="checkbox" name="andar_recheio" value="Brigadeiro branco" data-category="Tradicional" onchange="handleAndarRecheio(this)"> Brigadeiro branco</label>
+                            <label><input type="checkbox" name="andar_recheio" value="Limão" data-category="Tradicional" onchange="handleAndarRecheio(this)"> Limão</label>
+                            <label><input type="checkbox" name="andar_recheio" value="Coco" data-category="Tradicional" onchange="handleAndarRecheio(this)"> Coco</label>
+                            <label><input type="checkbox" name="andar_recheio" value="Paçoca" data-category="Tradicional" onchange="handleAndarRecheio(this)"> Paçoca</label>
+                        </div>
+                    </div>
+
+                    <div class="recheio-category">
+                        <h5>Especiais</h5>
+                        <div class="options-grid">
+                            <label><input type="checkbox" name="andar_recheio" value="Ninho" data-category="Especial" onchange="handleAndarRecheio(this)"> Ninho</label>
+                            <label><input type="checkbox" name="andar_recheio" value="Doce de leite" data-category="Especial" onchange="handleAndarRecheio(this)"> Doce de leite</label>
+                            <label><input type="checkbox" name="andar_recheio" value="Limão siciliano" data-category="Especial" onchange="handleAndarRecheio(this)"> Limão siciliano</label>
+                            <label><input type="checkbox" name="andar_recheio" value="Maracujá" data-category="Especial" onchange="handleAndarRecheio(this)"> Maracujá</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Adicionais</label>
+                    <div class="options-grid" id="andar-adicionais-container">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Observações Adicionais (Decoração, Cores, etc)</label>
+                    <textarea id="andar-obs" rows="3" placeholder="Descreva como deseja o bolo..."></textarea>
+                </div>
+                <div class="price-summary">
+                    <span>Total Estimado:</span>
+                    <strong id="andar-live-price">R$ 350,00</strong>
+                </div>
+                <button type="button" class="btn-primary" onclick="addAndarToCart()">Adicionar ao Carrinho</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Doces Modal -->
+    <div id="doces-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('doces-modal')">&times;</span>
+            <h2>Doces</h2>
+            <form id="doces-form">
+            <div class="doces-list">
+
+                <!-- Doces Tradicionais -->
+                <div class="doce-product-card" data-category="Tradicionais" data-price="2.2" data-min="10" data-title="Doces Tradicionais (15g)">
+                    <img src="pics/doces tradicionais .jpeg" alt="Doces Tradicionais" class="doce-img">
+                    <div class="doce-content">
+                        <div class="doce-header">
+                            <div>
+                                <h3 class="doce-title">Doces Tradicionais (15g)</h3>
+                            </div>
+                            <div class="doce-price-tag">R$ 2,20/unid</div>
+                        </div>
+                        <div class="doce-inputs">
+                            <div class="form-group">
+                                <label>Quantidade (Mín: 10)</label>
+                                <input type="number" class="doce-qty" value="10" min="10" onchange="updateDoceCardPrice(this)">
+                            </div>
+                            <div class="form-group">
+                                <label>Sabor</label>
+                                <select class="doce-obs">
+                                    <option value="" disabled selected>Escolha o sabor...</option>
+                                    <option value="Brigadeiro">Brigadeiro</option>
+                                    <option value="Bem-casado">Bem-casado</option>
+                                    <option value="Surpresa de uva">Surpresa de uva</option>
+                                    <option value="Beijinho">Beijinho</option>
+                                    <option value="Paçoquinha">Paçoquinha</option>
+                                    <option value="Ninho">Ninho</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="doce-actions">
+                            <div class="doce-total">Total: R$ 22,00</div>
+                            <div class="doce-success-msg">✓ Adicionado!</div>
+                            <button type="button" class="btn-add-sm" onclick="addDoceCardToCart(this)">Adicionar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Doces Especiais -->
+                <div class="doce-product-card" data-category="Especiais" data-price="3.0" data-min="10" data-title="Doces Especiais (15g)">
+                    <img src="pics/doces especiais .jpeg" alt="Doces Especiais" class="doce-img">
+                    <div class="doce-content">
+                        <div class="doce-header">
+                            <div>
+                                <h3 class="doce-title">Doces Especiais (15g)</h3>
+                            </div>
+                            <div class="doce-price-tag">R$ 3,00/unid</div>
+                        </div>
+                        <div class="doce-inputs">
+                            <div class="form-group">
+                                <label>Quantidade (Mín: 10)</label>
+                                <input type="number" class="doce-qty" value="10" min="10" onchange="updateDoceCardPrice(this)">
+                            </div>
+                            <div class="form-group">
+                                <label>Sabor</label>
+                                <select class="doce-obs">
+                                    <option value="" disabled selected>Escolha o sabor...</option>
+                                    <option value="Belga (Callebaut)">Belga (Callebaut)</option>
+                                    <option value="Ninho com nutella">Ninho com nutella</option>
+                                    <option value="Churros">Churros</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="doce-actions">
+                            <div class="doce-total">Total: R$ 30,00</div>
+                            <div class="doce-success-msg">✓ Adicionado!</div>
+                            <button type="button" class="btn-add-sm" onclick="addDoceCardToCart(this)">Adicionar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carimbados -->
+                <div class="doce-product-card" data-category="Carimbados" data-price="3.5" data-min="10" data-title="Com Carimbo ou Modelados (15g)">
+                    <img src="pics/doces carimbados .jpeg" alt="Com Carimbo ou Modelados" class="doce-img">
+                    <div class="doce-content">
+                        <div class="doce-header">
+                            <div>
+                                <h3 class="doce-title">Com Carimbo ou Modelados (15g)</h3>
+                            </div>
+                            <div class="doce-price-tag">R$ 3,50/unid</div>
+                        </div>
+                        <div class="doce-inputs">
+                            <div class="form-group">
+                                <label>Quantidade (Mín: 10)</label>
+                                <input type="number" class="doce-qty" value="10" min="10" onchange="updateDoceCardPrice(this)">
+                            </div>
+                            <div class="form-group">
+                                <label>Sabor</label>
+                                <select class="doce-obs">
+                                    <option value="" disabled selected>Escolha o sabor...</option>
+                                    <option value="Ninho">Ninho</option>
+                                    <option value="Brigadeiro branco">Brigadeiro branco</option>
+                                    <option value="Bem-casado">Bem-casado</option>
+                                    <option value="Beijinho">Beijinho</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Qual texto ou inicial adicionar?</label>
+                                <input type="text" class="doce-custom-text" placeholder="Ex: Letra 'A'">
+                            </div>
+                        </div>
+                        <div class="doce-actions">
+                            <div class="doce-total">Total: R$ 35,00</div>
+                            <div class="doce-success-msg">✓ Adicionado!</div>
+                            <button type="button" class="btn-add-sm" onclick="addDoceCardToCart(this)">Adicionar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Personalizados -->
+                <div class="doce-product-card" data-category="Personalizados" data-price="4.0" data-min="10" data-title="Doces Personalizados">
+                    <img src="pics/doces personalizados .jpeg" alt="Doces Personalizados" class="doce-img">
+                    <div class="doce-content">
+                        <div class="doce-header">
+                            <div>
+                                <h3 class="doce-title">Doces Personalizados</h3>
+                            </div>
+                            <div class="doce-price-tag">R$ 4,00/unid</div>
+                        </div>
+                        <div class="doce-inputs">
+                            <div class="form-group">
+                                <label>Quantidade (Mín: 10)</label>
+                                <input type="number" class="doce-qty" value="10" min="10" onchange="updateDoceCardPrice(this)">
+                            </div>
+                            <div class="form-group">
+                                <label>Sabor</label>
+                                <select class="doce-obs">
+                                    <option value="" disabled selected>Escolha o sabor...</option>
+                                    <option value="Brigadeiro">Brigadeiro</option>
+                                    <option value="Bem-casado">Bem-casado</option>
+                                    <option value="Surpresa de uva">Surpresa de uva</option>
+                                    <option value="Beijinho">Beijinho</option>
+                                    <option value="Paçoca">Paçoca</option>
+                                    <option value="Ninho">Ninho</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Qual texto ou inicial adicionar?</label>
+                                <input type="text" class="doce-custom-text" placeholder="Ex: 'Feliz Aniversário'">
+                            </div>
+                        </div>
+                        <div class="doce-actions">
+                            <div class="doce-total">Total: R$ 40,00</div>
+                            <div class="doce-success-msg">✓ Adicionado!</div>
+                            <button type="button" class="btn-add-sm" onclick="addDoceCardToCart(this)">Adicionar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Frutinhas Basicas -->
+                <div class="doce-product-card" data-category="Frutinhas" data-price="2.0" data-min="5" data-title="Frutinha de Ninho (Básico)">
+                    <img src="pics/frutinha básica.jpeg" alt="Frutinha de Ninho (Básico)" class="doce-img">
+                    <div class="doce-content">
+                        <div class="doce-header">
+                            <div>
+                                <h3 class="doce-title">Frutinha de Ninho (Básico)</h3>
+                            </div>
+                            <div class="doce-price-tag">R$ 2,00/unid</div>
+                        </div>
+                        <div class="doce-inputs">
+                            <div class="form-group">
+                                <label>Quantidade (Mín: 5)</label>
+                                <input type="number" class="doce-qty" value="5" min="5" onchange="updateDoceCardPrice(this)">
+                            </div>
+                            <div class="form-group">
+                                <label>Sabores / Formatos</label>
+                                <input type="text" class="doce-obs" placeholder="Ex: Pera, maçã, laranja, limão siciliano, pitanga ou morango...">
+                            </div>
+                        </div>
+                        <div class="doce-actions">
+                            <div class="doce-total">Total: R$ 10,00</div>
+                            <div class="doce-success-msg">✓ Adicionado!</div>
+                            <button type="button" class="btn-add-sm" onclick="addDoceCardToCart(this)">Adicionar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Frutinhas Outras -->
+                <div class="doce-product-card" data-category="Frutinhas Outras" data-price="3.0" data-min="5" data-title="Frutinha de Ninho (Especial)">
+                    <img src="pics/frutinha especial .jpeg" alt="Frutinha de Ninho (Especial)" class="doce-img">
+                    <div class="doce-content">
+                        <div class="doce-header">
+                            <div>
+                                <h3 class="doce-title">Frutinha de Ninho (Especial)</h3>
+                            </div>
+                            <div class="doce-price-tag">R$ 3,00/unid</div>
+                        </div>
+                        <div class="doce-inputs">
+                            <div class="form-group">
+                                <label>Quantidade (Mín: 5)</label>
+                                <input type="number" class="doce-qty" value="5" min="5" onchange="updateDoceCardPrice(this)">
+                            </div>
+                            <div class="form-group">
+                                <label>Sabores / Formatos</label>
+                                <input type="text" class="doce-obs" placeholder="Ex: Abacaxi, caju, cenoura, etc (diferentes do básico)...">
+                            </div>
+                        </div>
+                        <div class="doce-actions">
+                            <div class="doce-total">Total: R$ 15,00</div>
+                            <div class="doce-success-msg">✓ Adicionado!</div>
+                            <button type="button" class="btn-add-sm" onclick="addDoceCardToCart(this)">Adicionar</button>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <!-- Brownie -->
+                <div class="doce-product-card" data-category="Brownie" data-price="2.5" data-min="36" data-title="Brownie Tradicional (Mini)">
+                    <img src="pics/brownie.jpeg" alt="Brownie Tradicional (Mini)" class="doce-img">
+                    <div class="doce-content">
+                        <div class="doce-header">
+                            <div>
+                                <h3 class="doce-title">Brownie Tradicional (Mini)</h3>
+                                <div class="doce-desc">Tamanho aprox. 4x4cm.</div>
+                            </div>
+                            <div class="doce-price-tag">R$ 2,50/unid</div>
+                        </div>
+                        <div class="doce-inputs">
+                            <div class="form-group">
+                                <label>Quantidade (Mín: 36)</label>
+                                <input type="number" class="doce-qty" value="36" min="36" onchange="updateDoceCardPrice(this)">
+                            </div>
+                            <div class="form-group">
+                                <label>Observações</label>
+                                <input type="text" class="doce-obs" placeholder="Ex: Sem detalhes específicos...">
+                            </div>
+                        </div>
+                        <div class="doce-actions">
+                            <div class="doce-total">Total: R$ 90,00</div>
+                            <div class="doce-success-msg">✓ Adicionado!</div>
+                            <button type="button" class="btn-add-sm" onclick="addDoceCardToCart(this)">Adicionar</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Populares Modal -->
+    <div id="populares-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('populares-modal')">&times;</span>
+            <h2>Mais Pedidos</h2>
+            <p>Selecione uma de nossas combinações de sucesso para personalizar o tamanho e finalizar seu pedido.</p>
+            <div class="product-cards" style="margin-top: 20px;">
+                <!-- Red Velvet -->
+                <div class="card" onclick="loadPopularTemplate('red-velvet')">
+                    <img src="pics/red Velvet .jpeg" alt="Red Velvet Supremo">
+                    <div class="card-content">
+                        <h4>Red Velvet Supremo</h4>
+                        <p>Naked Cake de Massa Red Velvet com Recheio de Cream cheese + Frutas Vermelhas.</p>
+                        <span class="btn-sm">Escolher este</span>
+                    </div>
+                </div>
+
+                <!-- Vintage Cake -->
+                <div class="card" onclick="loadPopularTemplate('vintage')">
+                    <img src="pics/bolo vintage .jpeg" alt="Vintage Cake">
+                    <div class="card-content">
+                        <h4>Bolo Vintage</h4>
+                        <p>Bolo de Chantilly clássico com decoração vintage e detalhes em bico.</p>
+                        <span class="btn-sm">Escolher este</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart View Modal -->
+    <div id="cart-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('cart-modal')">&times;</span>
+            <h2>Seu Pedido</h2>
+            <div id="cart-items-container">
+                <!-- Cart items list here -->
+            </div>
+            <div class="cart-summary">
+                <div class="summary-line">
+                    <span>Subtotal</span>
+                    <span id="cart-subtotal">R$ 0,00</span>
+                </div>
+                <div class="summary-line total">
+                    <span>Total</span>
+                    <span id="cart-final-total">R$ 0,00</span>
+                </div>
+            </div>
+            
+            <div class="form-group" style="margin-top: 20px;">
+                <label>Seu Nome</label>
+                <input type="text" id="customer-name" name="customer-name" placeholder="Como devemos lhe chamar?">
+            </div>
+
+            <div class="form-group">
+                <label>Data para Retirada</label>
+                <input type="date" id="pickup-date" name="pickup-date" onchange="checkDateWarning()">
+                <small class="hint">Lembrando: mínimo 3 dias de antecedência.</small>
+                <div id="date-warning" style="display: none; background: #ffebee; color: #c62828; padding: 10px; border-radius: 4px; font-size: 0.85rem; margin-top: 10px; border: 1px solid #ffcdd2; font-weight: 500;">
+                    ⚠️ A disponibilidade está sujeita a confirmação para pedidos com menos de 3 dias de antecedência.
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Horário de Retirada</label>
+                <input type="time" id="pickup-time" name="pickup-time" class="modern-time-input" onclick="this.showPicker()">
+            </div>
+
+            <div class="form-group">
+                <label>Forma de pagamento</label>
+                <select id="payment-method" name="payment-method">
+                    <option value="" disabled selected>Escolha uma opção...</option>
+                    <option value="PIX">PIX</option>
+                    <option value="Cartão de Crédito">Cartão de Crédito</option>
+                    <option value="Cartão de Débito">Cartão de Débito</option>
+                    <option value="Dinheiro">Dinheiro</option>
+                </select>
+                <small class="hint">50% na confirmação e 50% na retirada.</small>
+            </div>
+
+            <button type="button" class="btn-whatsapp" onclick="checkoutWhatsapp()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12.0003 2.00018C6.47728 2.00018 2.00028 6.47718 2.00028 12.0002C2.00028 13.8042 2.48328 15.5452 3.36428 17.0702L2.00028 22.0002L7.04528 20.6772C8.52728 21.5032 10.2313 21.9642 12.0003 21.9642C17.5233 21.9642 22.0003 17.4872 22.0003 11.9642C22.0003 6.44118 17.5233 2.00018 12.0003 2.00018ZM17.1523 16.2732C16.9243 16.9142 15.7703 17.4112 15.0863 17.4642C14.5363 17.5072 13.7713 17.6322 11.6663 16.7602C8.97228 15.6452 7.21828 12.9092 7.08628 12.7352C6.95328 12.5602 5.96428 11.2502 5.96428 9.89718C5.96428 8.54418 6.64728 7.88618 6.95328 7.58018C7.19928 7.33318 7.62528 7.21818 8.04428 7.21818C8.17628 7.21818 8.29828 7.22418 8.40428 7.22918C8.68828 7.24218 8.83128 7.25818 9.02028 7.71218C9.24828 8.26118 9.81628 9.64518 9.88328 9.78218C9.95028 9.92018 10.0443 10.1112 9.93128 10.3382C9.81828 10.5652 9.74228 10.6862 9.57128 10.8872C9.40028 11.0882 9.24028 11.2002 9.07028 11.4112C8.89028 11.6382 8.69128 11.8542 8.89028 12.1962C9.09028 12.5372 9.80528 13.7042 10.8603 14.6462C12.2213 15.8622 13.3193 16.2482 13.6973 16.4012C14.0003 16.5232 14.3603 16.4952 14.5883 16.2482C14.8723 15.9362 15.2313 15.4252 15.5903 14.9142C15.8563 14.5362 16.1773 14.4882 16.5183 14.6202C16.8593 14.7522 18.6603 15.6452 19.0203 15.8152C19.3793 15.9852 19.6173 16.0702 19.7023 16.2222C19.7873 16.3742 19.7873 17.1512 19.5313 17.7882L17.1523 16.2732Z"/>
+                </svg>
+                Finalizar Pedido no WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
