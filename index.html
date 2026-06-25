@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La Pâtisserie - Encomendas</title>
-    <link rel="stylesheet" href="style.css?v=1.1">
+    <link rel="stylesheet" href="style.css?v=1.3">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -92,8 +92,8 @@
                 <div class="form-group">
                     <label>Tipo de Bolo (Obrigatório)</label>
                     <div class="options-grid">
-                        <label class="radio-card"><input type="radio" name="cakeType" value="Chantilly"> Bolo de Chantilly</label>
-                        <label class="radio-card"><input type="radio" name="cakeType" value="Naked Cake"> Naked Cake</label>
+                        <label class="radio-card"><input type="radio" name="cakeType" value="Chantilly" onchange="updateCakePrice()"> Bolo de Chantilly</label>
+                        <label class="radio-card"><input type="radio" name="cakeType" value="Naked Cake" onchange="updateCakePrice()"> Naked Cake</label>
                     </div>
                 </div>
 
@@ -111,10 +111,10 @@
                 <div class="form-group">
                     <label>Massa (Obrigatório)</label>
                     <div class="options-grid">
-                        <label class="radio-card"><input type="radio" name="massa" value="Chocolate"> Chocolate</label>
-                        <label class="radio-card"><input type="radio" name="massa" value="Baunilha"> Baunilha</label>
-                        <label class="radio-card"><input type="radio" name="massa" value="Red Velvet"> Red Velvet</label>
-                        <label class="radio-card"><input type="radio" name="massa" value="Limão"> Limão</label>
+                        <label class="radio-card"><input type="radio" name="massa" value="Chocolate" onchange="updateCakePrice()"> Chocolate</label>
+                        <label class="radio-card"><input type="radio" name="massa" value="Baunilha" onchange="updateCakePrice()"> Baunilha</label>
+                        <label class="radio-card"><input type="radio" name="massa" value="Red Velvet" onchange="updateCakePrice()"> Red Velvet</label>
+                        <label class="radio-card"><input type="radio" name="massa" value="Limão" onchange="updateCakePrice()"> Limão</label>
                     </div>
                 </div>
 
@@ -211,10 +211,10 @@
                 <div class="form-group">
                     <label>Massa (Obrigatório)</label>
                     <div class="options-grid">
-                        <label class="radio-card"><input type="radio" name="andar_massa" value="Chocolate"> Chocolate</label>
-                        <label class="radio-card"><input type="radio" name="andar_massa" value="Baunilha"> Baunilha</label>
-                        <label class="radio-card"><input type="radio" name="andar_massa" value="Red Velvet"> Red Velvet</label>
-                        <label class="radio-card"><input type="radio" name="andar_massa" value="Limão"> Limão</label>
+                        <label class="radio-card"><input type="radio" name="andar_massa" value="Chocolate" onchange="updateAndarPrice()"> Chocolate</label>
+                        <label class="radio-card"><input type="radio" name="andar_massa" value="Baunilha" onchange="updateAndarPrice()"> Baunilha</label>
+                        <label class="radio-card"><input type="radio" name="andar_massa" value="Red Velvet" onchange="updateAndarPrice()"> Red Velvet</label>
+                        <label class="radio-card"><input type="radio" name="andar_massa" value="Limão" onchange="updateAndarPrice()"> Limão</label>
                     </div>
                 </div>
 
@@ -601,6 +601,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=1.1"></script>
+    <script src="script.js?v=1.3"></script>
 </body>
 </html>

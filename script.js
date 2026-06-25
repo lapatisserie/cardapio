@@ -123,7 +123,7 @@ function handleRecheioLimit(checkbox) {
     const checked = document.querySelectorAll('input[name="recheio"]:checked');
     if (checked.length > 2) {
         checkbox.checked = false;
-        alert("Você pode escolher no máximo 2 sabores de recheio.");
+        scrollToError(checkbox, "Você pode escolher no máximo 2 sabores de recheio.");
         return;
     }
     
@@ -131,7 +131,7 @@ function handleRecheioLimit(checkbox) {
     const sizeEl = document.querySelector('input[name="size"]:checked');
     if (sizeEl && sizeEl.value === 'PP' && checkbox.dataset.category === 'Premium' && checkbox.checked) {
         checkbox.checked = false;
-        alert("Recheios Premium não estão disponíveis para o tamanho PP.");
+        scrollToError(checkbox, "Recheios Premium não estão disponíveis para o tamanho PP.");
         return;
     }
 
@@ -224,7 +224,7 @@ function updateCakePrice() {
     if(sizeEl && sizeEl.value === 'PP') {
         const premiums = document.querySelectorAll('input[name="recheio"][data-category="Premium"]:checked');
         if(premiums.length > 0) {
-            alert("Tamanho PP selecionado. Recheios Premium foram desmarcados.");
+            scrollToError('size', "Tamanho PP selecionado. Recheios Premium foram desmarcados.");
             premiums.forEach(p => p.checked = false);
         }
     }
@@ -238,11 +238,21 @@ function updateCakePrice() {
 let lastErrorField = null;
 let errorCount = 0;
 
-function scrollToError(fieldName, message) {
-    if (lastErrorField === fieldName) {
+function scrollToError(field, message) {
+    let el;
+    let fieldIdentifier;
+    if (typeof field === 'string') {
+        el = document.querySelector(`[name="${field}"]`) || document.querySelector(`[data-field="${field}"]`);
+        fieldIdentifier = field;
+    } else {
+        el = field;
+        fieldIdentifier = el.name || el.id || el.className || 'unknown_field';
+    }
+
+    if (lastErrorField === fieldIdentifier) {
         errorCount++;
     } else {
-        lastErrorField = fieldName;
+        lastErrorField = fieldIdentifier;
         errorCount = 1;
     }
 
@@ -251,13 +261,10 @@ function scrollToError(fieldName, message) {
         errorCount = 0; // Reset after showing the alert
     }
 
-    // Find the input/select/group for this field
-    let el = document.querySelector(`[name="${fieldName}"]`)
-           || document.querySelector(`[data-field="${fieldName}"]`);
     if (!el) return;
 
     // Walk up to the nearest .form-group
-    const group = el.closest('.form-group');
+    const group = el.closest('.form-group') || el.parentElement;
     if (!group) return;
 
     // Remove any existing error message
@@ -287,8 +294,12 @@ function scrollToError(fieldName, message) {
 
     // Clear error state when the user interacts with this group
     const clearError = () => {
-        group.classList.remove('field-error', 'fading');
-        if (msg && msg.parentNode) msg.remove();
+        group.classList.add('fading');
+        if (msg) msg.classList.add('fading');
+        setTimeout(() => {
+            group.classList.remove('field-error', 'fading');
+            if (msg && msg.parentNode) msg.remove();
+        }, 500); // 0.5s transition
         group.removeEventListener('change', clearError);
         group.removeEventListener('input', clearError);
     };
@@ -446,7 +457,7 @@ function updateAndarPrice() {
 function handleAndarRecheio(checkbox) {
     const checked = document.querySelectorAll('input[name="andar_recheio"]:checked');
     if (checked.length > 2) {
-        alert("Você pode escolher no máximo 2 recheios.");
+        scrollToError(checkbox, "Você pode escolher no máximo 2 recheios.");
         checkbox.checked = false;
     }
     updateAndarPrice();
@@ -536,7 +547,7 @@ function addDoceCardToCart(buttonElement) {
     const obs = obsInput ? obsInput.value : '';
     
     if (obsInput && !obs) {
-        alert("Por favor, escolha ou digite o sabor/detalhe do doce.");
+        scrollToError(obsInput, "Por favor, escolha ou digite o sabor/detalhe do doce.");
         return;
     }
     
@@ -544,8 +555,8 @@ function addDoceCardToCart(buttonElement) {
     const customText = customTextInput ? customTextInput.value : '';
 
     if (qty < minQty) {
-        alert(`A quantidade mínima para esta categoria é ${minQty} unidades.`);
         qtyInput.value = minQty;
+        scrollToError(qtyInput, `A quantidade mínima para esta categoria é ${minQty} unidades.`);
         updateDoceCardPrice(qtyInput);
         return;
     }
@@ -644,8 +655,8 @@ function checkDateWarning() {
     
     // Bloquear Domingos (0)
     if (pickupDate.getDay() === 0) {
-        alert("Não realizamos entregas ou retiradas aos domingos. Por favor, escolha outra data.");
         document.getElementById('pickup-date').value = '';
+        scrollToError('pickup-date', "Não realizamos entregas ou retiradas aos domingos. Por favor, escolha outra data.");
         warningEl.style.display = 'none';
         return;
     }
@@ -665,7 +676,7 @@ function checkDateWarning() {
 
 function checkoutWhatsapp() {
     if(cart.length === 0) {
-        alert("Seu carrinho está vazio.");
+        scrollToError(document.querySelector('.btn-whatsapp'), "Seu carrinho está vazio.");
         return;
     }
 
