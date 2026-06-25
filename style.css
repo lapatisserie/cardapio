@@ -552,6 +552,14 @@ button.btn-whatsapp:hover {
     margin-top: 20px;
 }
 
+@media (min-width: 600px) {
+    .doces-list {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-auto-rows: 1fr;
+    }
+}
+
 .doce-product-card {
     display: flex;
     flex-direction: column;

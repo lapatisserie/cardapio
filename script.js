@@ -563,9 +563,9 @@ function addDoceCardToCart(buttonElement) {
 
     const price = qty * pricePerUnit;
     
-    let detailsText = obs ? `Detalhes/Sabores: ${obs}` : 'Sem detalhes específicos';
+    let detailsText = obs ? `Sabores: ${obs}` : 'Sem detalhes específicos';
     if (customText) {
-        detailsText += ` | Texto/Inicial: ${customText}`;
+        detailsText += ` | Detalhes: ${customText}`;
     }
 
     cart.push({
@@ -750,7 +750,8 @@ function checkoutWhatsapp() {
     msg += `Data: ${formattedDate}\n`;
     msg += `Horário: ${time}\n\n`;
 
-    let otherItems = '';
+    let secondaryCakes = '';
+    let docesItems = '';
     let total = 0;
     let hasCustomCake = false;
 
@@ -772,18 +773,22 @@ function checkoutWhatsapp() {
             }
         } else if ((item.type === 'Bolo Personalizado' || item.type === 'Bolo de Andar') && hasCustomCake) {
             // Second custom cake
-            otherItems += `${item.type} 2\n`;
-            otherItems += `Tamanho: ${item.tamanho} | Massa: ${item.massa} | Recheio: ${item.recheio}\n`;
-            if (item.adicionais) otherItems += `Adicionais: ${item.adicionais}\n`;
-            if (item.obs) otherItems += `Obs: ${item.obs}\n\n`;
+            secondaryCakes += `${item.type} (Adicional)\n`;
+            secondaryCakes += `Tamanho: ${item.tamanho} | Massa: ${item.massa} | Recheio: ${item.recheio}\n`;
+            if (item.adicionais) secondaryCakes += `Adicionais: ${item.adicionais}\n`;
+            if (item.obs) secondaryCakes += `Obs: ${item.obs}\n\n`;
         } else {
-            otherItems += `${item.title}\n`;
-            otherItems += `Detalhes: ${item.details}\n\n`;
+            docesItems += `${item.title}\n`;
+            docesItems += `${item.details}\n\n`;
         }
     });
 
-    if (otherItems) {
-        msg += `Outros Itens:\n${otherItems}`;
+    if (secondaryCakes) {
+        msg += `Outros Bolos:\n${secondaryCakes}`;
+    }
+
+    if (docesItems) {
+        msg += `Doces:\n${docesItems}`;
     }
 
     msg += `Valor Total: R$ ${total.toFixed(2).replace('.', ',')}\n\n`;
