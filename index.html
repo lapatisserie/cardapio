@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La Pâtisserie - Encomendas</title>
-    <link rel="stylesheet" href="style.css?v=2.0">
+    <link rel="stylesheet" href="style.css?v=2.5">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div class="floating-bg">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
     <header>
         <div class="logo-container">
             <h1>La Pâtisserie</h1>
@@ -67,7 +70,7 @@
             <ul>
                 <li><strong>Encomendas:</strong> Mínimo de 3 dias de antecedência.</li>
                 <li><strong>Pagamento:</strong> 50% na confirmação, 50% na retirada (PIX, Crédito, Débito).</li>
-                <li><strong>Retiradas:</strong> Rua João Dias Martins, 110, Boa Viagem. (Não entregamos, mas aceitamos Uber Flash).</li>
+                <li><strong>Retiradas:</strong> Rua João Dias Martins, 110, Boa Viagem, Recife - Pernambuco. (Não entregamos, mas aceitamos Uber Flash).</li>
             </ul>
         </section>
     </main>
@@ -155,7 +158,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Seu bolo terá mais de uma cor? (Obrigatório)</label>
+                    <label>Seu bolo terá mais de uma cor? (ex: flores coloridas, mais de uma cor na base) (Obrigatório)</label>
                     <div class="options-grid">
                         <label class="radio-card"><input type="radio" name="mais_cor" value="Sim" onchange="updateCakePrice()"> Sim</label>
                         <label class="radio-card"><input type="radio" name="mais_cor" value="Não" onchange="updateCakePrice()"> Não</label>
@@ -630,6 +633,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=2.0"></script>
+    <script src="script.js?v=2.5"></script>
 </body>
 </html>

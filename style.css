@@ -33,6 +33,40 @@ body {
     padding-bottom: 80px;
 }
 
+/* Floating Background Animation */
+.floating-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.floating-bg span {
+    position: absolute;
+    display: block;
+    background: var(--color-pink);
+    opacity: 0.3;
+    border-radius: 50%;
+    animation: floatUp 25s linear infinite;
+    bottom: -150px;
+}
+
+.floating-bg span:nth-child(1) { left: 10%; width: 40px; height: 40px; animation-duration: 25s; animation-delay: 0s; }
+.floating-bg span:nth-child(2) { left: 30%; width: 25px; height: 25px; animation-duration: 21s; animation-delay: 4s; }
+.floating-bg span:nth-child(3) { left: 70%; width: 35px; height: 35px; animation-duration: 30s; animation-delay: 2s; }
+.floating-bg span:nth-child(4) { left: 45%; width: 15px; height: 15px; animation-duration: 18s; animation-delay: 0s; }
+.floating-bg span:nth-child(5) { left: 85%; width: 50px; height: 50px; animation-duration: 35s; animation-delay: 5s; }
+.floating-bg span:nth-child(6) { left: 20%; width: 10px; height: 10px; animation-duration: 15s; animation-delay: 8s; }
+
+@keyframes floatUp {
+    0% { transform: translateY(0); opacity: 0.4; }
+    100% { transform: translateY(-1000px); opacity: 0; }
+}
+
 header {
     background-color: var(--color-primary);
     color: white;
