@@ -658,6 +658,7 @@ function checkDateWarning() {
         document.getElementById('pickup-date').value = '';
         scrollToError('pickup-date', "Não realizamos entregas ou retiradas aos domingos. Por favor, escolha outra data.");
         warningEl.style.display = 'none';
+        generateTimeSlots('');
         return;
     }
     
@@ -672,6 +673,8 @@ function checkDateWarning() {
     } else {
         warningEl.style.display = 'none';
     }
+    
+    generateTimeSlots(dateVal);
 }
 
 function checkoutWhatsapp() {
@@ -798,3 +801,167 @@ function checkoutWhatsapp() {
     const phone = "558187140549"; // Updated WhatsApp number
     window.open(`https://wa.me/${phone}?text=${encodedMsg}`, '_blank');
 }
+
+// Time Picker Logic
+let timeObserver;
+
+function initTimePicker() {
+    const hourCol = document.getElementById('time-col-hour');
+    
+    if (timeObserver) timeObserver.disconnect();
+    
+    timeObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('selected');
+                updateTimeInput();
+            } else {
+                entry.target.classList.remove('selected');
+            }
+        });
+    }, {
+        root: hourCol.parentElement,
+        rootMargin: "-50px 0px -50px 0px", 
+        threshold: 0.5
+    });
+
+    document.querySelectorAll('.time-item').forEach(el => timeObserver.observe(el));
+    
+    document.querySelectorAll('.time-item').forEach(el => {
+        el.onclick = () => {
+            el.parentElement.scrollTo({
+                top: el.offsetTop - el.parentElement.offsetTop - 55,
+                behavior: 'smooth'
+            });
+        };
+    });
+
+    // Drag to scroll for desktop (Discrete Ratcheting)
+    document.querySelectorAll('.time-picker-col').forEach(slider => {
+        if (slider.dataset.dragInit) return;
+        slider.dataset.dragInit = 'true';
+        
+        let isDown = false;
+        let startY;
+
+        const onMouseUp = () => {
+            if(isDown) {
+                isDown = false;
+                slider.style.cursor = 'default';
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+            }
+        };
+
+        const onMouseMove = (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const y = e.pageY;
+            const walk = y - startY;
+            
+            // Ratchet "click" every 25px dragged
+            if (Math.abs(walk) > 25) {
+                const direction = walk > 0 ? -1 : 1;
+                slider.scrollTop += 40 * direction;
+                startY = y; 
+            }
+        };
+
+        slider.addEventListener('mousedown', (e) => {
+            e.preventDefault(); // Prevent native drag/selection
+            isDown = true;
+            slider.style.cursor = 'grabbing';
+            startY = e.pageY;
+            
+            // Bind to document so dragging continues even if mouse leaves the box
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        });
+    });
+}
+
+function updateTimeInput() {
+    const selectedHour = document.querySelector('#time-col-hour .time-item.selected');
+    const selectedMinute = document.querySelector('#time-col-minute .time-item.selected');
+    const hiddenInput = document.getElementById('pickup-time');
+    
+    if (selectedHour && selectedMinute) {
+        let h = selectedHour.getAttribute('data-val');
+        let m = selectedMinute.getAttribute('data-val');
+        
+        const dateInput = document.getElementById('pickup-date').value;
+        let maxHour = 17; // Default
+        
+        if (dateInput) {
+            const dateObj = new Date(dateInput + 'T12:00:00');
+            const dayOfWeek = dateObj.getDay();
+            if (dayOfWeek === 6) maxHour = 14;
+        }
+        
+        const minute30 = document.querySelector('#time-col-minute .time-item[data-val="30"]');
+        
+        if (parseInt(h) === maxHour) {
+            if (minute30) minute30.style.display = 'none';
+            if (m === '30') {
+                const zeroMinute = document.querySelector('#time-col-minute .time-item[data-val="00"]');
+                if (zeroMinute) {
+                    const parent = zeroMinute.parentElement;
+                    parent.scrollTop = zeroMinute.offsetTop - parent.offsetTop - 55;
+                }
+                m = '00';
+            }
+        } else {
+            if (minute30) minute30.style.display = 'block';
+        }
+        
+        hiddenInput.value = `${h}:${m}`;
+    }
+}
+
+function generateTimeSlots(dateString) {
+    const hourCol = document.getElementById('time-col-hour');
+    
+    const currentInput = document.getElementById('pickup-time').value;
+    let targetHour = currentInput ? currentInput.split(':')[0] : '12';
+    const targetMinute = currentInput ? currentInput.split(':')[1] : '00';
+    
+    let maxHour = 17; // Default
+    
+    if (dateString) {
+        const dateObj = new Date(dateString + 'T12:00:00');
+        if (dateObj.getDay() === 6) {
+            maxHour = 14;
+        }
+    }
+    
+    // Snap back to 12 if incompatible
+    if (parseInt(targetHour) > maxHour) {
+        targetHour = '12';
+    }
+    
+    hourCol.innerHTML = '';
+    
+    for (let h = 10; h <= maxHour; h++) {
+        let val = h.toString().padStart(2, '0');
+        hourCol.innerHTML += `<div class="time-item" data-val="${val}">${val}</div>`;
+    }
+    
+    initTimePicker();
+    
+    setTimeout(() => {
+        const hourEl = hourCol.querySelector(`.time-item[data-val="${targetHour}"]`);
+        const minEl = document.getElementById('time-col-minute').querySelector(`.time-item[data-val="${targetMinute}"]`);
+        
+        if (hourEl) {
+            hourEl.parentElement.scrollTop = hourEl.offsetTop - hourEl.parentElement.offsetTop - 55;
+        }
+        if (minEl) {
+            minEl.parentElement.scrollTop = minEl.offsetTop - minEl.parentElement.offsetTop - 55;
+        }
+    }, 50);
+}
+
+// Initial state
+document.addEventListener('DOMContentLoaded', () => {
+    generateTimeSlots('');
+});

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La Pâtisserie - Encomendas</title>
-    <link rel="stylesheet" href="style.css?v=2.5">
+    <link rel="stylesheet" href="style.css?v=3.1">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -609,7 +609,21 @@
 
             <div class="form-group">
                 <label>Horário de Retirada</label>
-                <input type="time" id="pickup-time" name="pickup-time" class="modern-time-input" onclick="this.showPicker()">
+                <input type="hidden" id="pickup-time" name="pickup-time" value="12:00">
+                
+                <div id="sunday-warning" style="display: none; background: #ffebee; color: #c62828; padding: 10px; border-radius: 4px; font-size: 0.85rem; margin-top: 10px; border: 1px solid #ffcdd2; font-weight: 500;">
+                    ⚠️ Loja fechada aos domingos.
+                </div>
+
+                <div class="time-picker-container" id="custom-time-picker">
+                    <div class="time-picker-selection"></div>
+                    <div class="time-picker-col" id="time-col-hour"></div>
+                    <div class="time-picker-colon">:</div>
+                    <div class="time-picker-col" id="time-col-minute">
+                        <div class="time-item" data-val="00">00</div>
+                        <div class="time-item" data-val="30">30</div>
+                    </div>
+                </div>
             </div>
 
             <div class="form-group">
@@ -633,6 +647,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=2.5"></script>
+    <script src="script.js?v=3.1"></script>
 </body>
 </html>
