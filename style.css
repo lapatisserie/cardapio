@@ -574,6 +574,34 @@ button.btn-whatsapp:hover {
     transition: opacity 0.5s ease;
 }
 
+#secret-toast {
+    visibility: hidden;
+    min-width: 250px;
+    background-color: #f7e6e8;
+    color: #4a3b32;
+    text-align: center;
+    border-radius: 8px;
+    padding: 16px;
+    position: fixed;
+    z-index: 10000;
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%);
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.3s, bottom 0.3s;
+    font-family: 'Poppins', sans-serif;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border: 1px solid #d4a5a5;
+    font-weight: 500;
+}
+
+#secret-toast.show {
+    visibility: visible;
+    opacity: 1;
+    bottom: 50px;
+}
+
 .field-error-msg.fading {
     opacity: 0;
 }

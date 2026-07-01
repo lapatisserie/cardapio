@@ -677,76 +677,54 @@ function checkDateWarning() {
     generateTimeSlots(dateVal);
 }
 
-function checkoutWhatsapp() {
-    if(cart.length === 0) {
+function generateOrderMessage(ignoreValidation = false) {
+    if(cart.length === 0 && !ignoreValidation) {
         scrollToError(document.querySelector('.btn-whatsapp'), "Seu carrinho está vazio.");
-        return;
+        return null;
     }
 
-    const name = document.getElementById('customer-name').value.trim();
-    const date = document.getElementById('pickup-date').value;
-    const time = document.getElementById('pickup-time').value;
-    const payment = document.getElementById('payment-method').value;
+    const name = document.getElementById('customer-name').value.trim() || "";
+    const date = document.getElementById('pickup-date').value || "";
+    const time = document.getElementById('pickup-time').value || "";
+    const payment = document.getElementById('payment-method').value || "";
 
-    if(!name) {
-        scrollToError('customer-name', '⚠ Por favor, preencha o seu nome.');
-        return;
-    }
-    if(!date) {
-        scrollToError('pickup-date', '⚠ Por favor, escolha a data de retirada.');
-        return;
-    }
-    if(!time) {
-        scrollToError('pickup-time', '⚠ Por favor, escolha o horário de retirada.');
-        return;
-    }
-    if(!payment) {
-        scrollToError('payment-method', '⚠ Por favor, selecione a forma de pagamento.');
-        return;
-    }
+    if(!ignoreValidation) {
+        if(!name) { scrollToError('customer-name', '⚠ Por favor, preencha o seu nome.'); return null; }
+        if(!date) { scrollToError('pickup-date', '⚠ Por favor, escolha a data de retirada.'); return null; }
+        if(!time) { scrollToError('pickup-time', '⚠ Por favor, escolha o horário de retirada.'); return null; }
+        if(!payment) { scrollToError('payment-method', '⚠ Por favor, selecione a forma de pagamento.'); return null; }
 
-    // Check date valid (at least today)
-    const pickupDate = new Date(date + 'T00:00:00');
-    const today = new Date();
-    today.setHours(0,0,0,0);
-    
-    if(pickupDate < today) {
-        scrollToError('pickup-date', '⚠ A data não pode estar no passado.');
-        return;
-    }
-    
-    if(pickupDate.getDay() === 0) {
-        scrollToError('pickup-date', '⚠ Não abrimos aos domingos. Escolha outra data.');
-        return;
-    }
+        const pickupDate = new Date(date + 'T00:00:00');
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        
+        if(pickupDate < today) { scrollToError('pickup-date', '⚠ A data não pode estar no passado.'); return null; }
+        if(pickupDate.getDay() === 0) { scrollToError('pickup-date', '⚠ Não abrimos aos domingos.'); return null; }
 
-    // Time validation
-    const [hours, minutes] = time.split(':').map(Number);
-    const totalMinutes = hours * 60 + minutes;
-    
-    // Limits
-    const startMins = 10 * 60; // 10:00
-    const endWeekdayMins = 17 * 60; // 17:00
-    const endSaturdayMins = 14 * 60; // 14:00
-    
-    const dayOfWeek = pickupDate.getDay();
-    if (dayOfWeek >= 1 && dayOfWeek <= 5) { // Segunda a Sexta
-        if (totalMinutes < startMins || totalMinutes > endWeekdayMins) {
-            scrollToError('pickup-time', '⚠ Horário de segunda a sexta é das 10:00 às 17:00.');
-            return;
-        }
-    } else if (dayOfWeek === 6) { // Sábado
-        if (totalMinutes < startMins || totalMinutes > endSaturdayMins) {
-            scrollToError('pickup-time', '⚠ Horário aos sábados é das 10:00 às 14:00.');
-            return;
+        const [hours, minutes] = time.split(':').map(Number);
+        const totalMinutes = hours * 60 + minutes;
+        const startMins = 10 * 60;
+        const endWeekdayMins = 17 * 60;
+        const endSaturdayMins = 14 * 60;
+        
+        const dayOfWeek = pickupDate.getDay();
+        if (dayOfWeek >= 1 && dayOfWeek <= 5) {
+            if (totalMinutes < startMins || totalMinutes > endWeekdayMins) {
+                scrollToError('pickup-time', '⚠ Horário de segunda a sexta é das 10:00 às 17:00.'); return null;
+            }
+        } else if (dayOfWeek === 6) {
+            if (totalMinutes < startMins || totalMinutes > endSaturdayMins) {
+                scrollToError('pickup-time', '⚠ Horário aos sábados é das 10:00 às 14:00.'); return null;
+            }
         }
     }
 
-    // Format date nicely
-    const dateArr = date.split('-');
-    const formattedDate = `${dateArr[2]}/${dateArr[1]}/${dateArr[0]}`;
+    let formattedDate = "";
+    if (date) {
+        const dateArr = date.split('-');
+        formattedDate = `${dateArr[2]}/${dateArr[1]}/${dateArr[0]}`;
+    }
 
-    // Build Message
     let msg = `Registro da Encomenda\n\n`;
     msg += `Nome: ${name}\n\n`;
     msg += `Retirada\n`;
@@ -758,7 +736,7 @@ function checkoutWhatsapp() {
     let total = 0;
     let hasCustomCake = false;
 
-    cart.forEach((item, index) => {
+    cart.forEach((item) => {
         total += item.price;
         if ((item.type === 'Bolo Personalizado' || item.type === 'Bolo de Andar') && !hasCustomCake) {
             hasCustomCake = true;
@@ -775,7 +753,6 @@ function checkoutWhatsapp() {
                 msg += `\n`;
             }
         } else if ((item.type === 'Bolo Personalizado' || item.type === 'Bolo de Andar') && hasCustomCake) {
-            // Second custom cake
             secondaryCakes += `${item.type} (Adicional)\n`;
             secondaryCakes += `Tamanho: ${item.tamanho} | Massa: ${item.massa} | Recheio: ${item.recheio}\n`;
             if (item.adicionais) secondaryCakes += `Adicionais: ${item.adicionais}\n`;
@@ -786,20 +763,68 @@ function checkoutWhatsapp() {
         }
     });
 
-    if (secondaryCakes) {
-        msg += `Outros Bolos:\n${secondaryCakes}`;
-    }
-
-    if (docesItems) {
-        msg += `Doces:\n${docesItems}`;
-    }
+    if (secondaryCakes) msg += `Outros Bolos:\n${secondaryCakes}`;
+    if (docesItems) msg += `Doces:\n${docesItems}`;
 
     msg += `Valor Total: R$ ${total.toFixed(2).replace('.', ',')}\n\n`;
     msg += `Forma de pagamento: ${payment}`;
 
+    return msg;
+}
+
+function checkoutWhatsapp() {
+    const msg = generateOrderMessage(false);
+    if (!msg) return;
+
     const encodedMsg = encodeURIComponent(msg);
-    const phone = "558187140549"; // Updated WhatsApp number
+    const phone = "558187140549";
     window.open(`https://wa.me/${phone}?text=${encodedMsg}`, '_blank');
+}
+
+// Secret Feature: Long press to copy without validation
+let secretPressTimer;
+
+function initSecretFeature() {
+    const btn = document.querySelector('.btn-whatsapp');
+    if (!btn) return;
+    
+    const startTimer = () => {
+        secretPressTimer = setTimeout(() => {
+            const msg = generateOrderMessage(true);
+            if (msg) {
+                navigator.clipboard.writeText(msg).then(() => {
+                    showToast("✅ Texto copiado (Modo Secreto)");
+                }).catch(err => {
+                    showToast("❌ Erro ao copiar");
+                });
+            }
+        }, 1500); // 1.5s press
+    };
+    
+    const clearTimer = () => {
+        clearTimeout(secretPressTimer);
+    };
+    
+    btn.addEventListener('mousedown', startTimer);
+    btn.addEventListener('touchstart', startTimer, {passive: true});
+    btn.addEventListener('mouseup', clearTimer);
+    btn.addEventListener('mouseleave', clearTimer);
+    btn.addEventListener('touchend', clearTimer);
+    btn.addEventListener('touchcancel', clearTimer);
+}
+
+function showToast(message) {
+    let toast = document.getElementById('secret-toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'secret-toast';
+        document.body.appendChild(toast);
+    }
+    toast.textContent = message;
+    toast.className = 'toast show';
+    setTimeout(() => {
+        toast.className = 'toast';
+    }, 3000);
 }
 
 // Time Picker Logic
@@ -964,4 +989,5 @@ function generateTimeSlots(dateString) {
 // Initial state
 document.addEventListener('DOMContentLoaded', () => {
     generateTimeSlots('');
+    initSecretFeature();
 });
