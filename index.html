@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La Pâtisserie - Encomendas</title>
-    <link rel="stylesheet" href="style.css?v=3.3">
+    <link rel="stylesheet" href="style.css?v=3.8">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -152,7 +152,7 @@
                         <div class="options-grid">
                             <label><input type="checkbox" name="recheio" value="Pistache" data-category="Premium" onchange="handleRecheioLimit(this)"> Pistache</label>
                             <label><input type="checkbox" name="recheio" value="Ninho com Nutella" data-category="Premium" onchange="handleRecheioLimit(this)"> Ninho com Nutella</label>
-                            <label><input type="checkbox" name="recheio" value="Cream cheese com frutas vermelhas" data-category="Premium" onchange="handleRecheioLimit(this)"> Cream cheese + Frutas Vermelhas</label>
+                            <label><input type="checkbox" name="recheio" value="Brigadeiro de Cream cheese com frutas vermelhas" data-category="Premium" onchange="handleRecheioLimit(this)"> Brigadeiro de Cream cheese + Frutas Vermelhas</label>
                         </div>
                     </div>
                 </div>
@@ -383,12 +383,12 @@
                 </div>
 
                 <!-- Personalizados -->
-                <div class="doce-product-card" data-category="Personalizados" data-price="4.0" data-min="10" data-title="Doces Personalizados (Pasta de ninho)">
-                    <img src="pics/doces personalizados .jpeg" alt="Doces Personalizados" class="doce-img">
+                <div class="doce-product-card" data-category="Personalizados" data-modelagem="true" data-price="4.0" data-min="10" data-title="Doces Modelados (Pasta de ninho)">
+                    <img src="pics/doces personalizados .jpeg" alt="Doces Modelados" class="doce-img">
                     <div class="doce-content">
                         <div class="doce-header">
                             <div>
-                                <h3 class="doce-title">Doces Personalizados (Pasta de ninho)</h3>
+                                <h3 class="doce-title">Doces Modelados (Pasta de ninho)</h3>
                             </div>
                             <div class="doce-price-tag">R$ 4,00/unid</div>
                         </div>
@@ -399,8 +399,8 @@
                             </div>
                             <input type="hidden" class="doce-obs" value="Ninho">
                             <div class="form-group">
-                                <label>Formatos</label>
-                                <input type="text" class="doce-custom-text" placeholder="Ex: 'Fogueiras'">
+                                <label>Modelagem</label>
+                                <input type="text" class="doce-custom-text" placeholder="Ex: 'fogueiras'">
                             </div>
                         </div>
                         <div class="doce-actions">
@@ -555,7 +555,7 @@
                     <img src="pics/red Velvet .jpeg" alt="Red Velvet Supremo">
                     <div class="card-content">
                         <h4>Red Velvet Supremo</h4>
-                        <p>Naked Cake de Massa Red Velvet com Recheio de Cream cheese + Frutas Vermelhas.</p>
+                        <p>Naked Cake de Massa Red Velvet com Recheio de Brigadeiro de Cream cheese + Frutas Vermelhas.</p>
                         <span class="btn-sm">Escolher este</span>
                     </div>
                 </div>
@@ -647,6 +647,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=3.3"></script>
+    <script src="script.js?v=3.8"></script>
 </body>
 </html>

@@ -69,7 +69,7 @@ function loadPopularTemplate(template) {
         document.querySelector('input[name="size"][value="P"]').checked = true; 
         document.querySelector('input[name="massa"][value="Red Velvet"]').checked = true;
         
-        const recheio = document.querySelector('input[name="recheio"][value="Cream cheese com frutas vermelhas"]');
+        const recheio = document.querySelector('input[name="recheio"][value="Brigadeiro de Cream cheese com frutas vermelhas"]');
         if (recheio) recheio.checked = true;
     } else if (template === 'vintage') {
         document.querySelector('input[name="cakeType"][value="Chantilly"]').checked = true;
@@ -563,9 +563,14 @@ function addDoceCardToCart(buttonElement) {
 
     const price = qty * pricePerUnit;
     
-    let detailsText = obs ? `Sabores: ${obs}` : 'Sem detalhes específicos';
-    if (customText) {
-        detailsText += ` | Detalhes: ${customText}`;
+    let detailsText;
+    if (card.dataset.modelagem === "true") {
+        detailsText = `Modelagem: ${customText || 'Não especificada'}`;
+    } else {
+        detailsText = obs ? `Sabores: ${obs}` : 'Sem detalhes específicos';
+        if (customText) {
+            detailsText += ` | Detalhes: ${customText}`;
+        }
     }
 
     cart.push({
@@ -738,9 +743,11 @@ function generateOrderMessage(ignoreValidation = false) {
 
     cart.forEach((item) => {
         total += item.price;
+        const formattedPrice = `R$ ${item.price.toFixed(2).replace('.', ',')}`;
+
         if ((item.type === 'Bolo Personalizado' || item.type === 'Bolo de Andar') && !hasCustomCake) {
             hasCustomCake = true;
-            msg += `Detalhes do bolo\n`;
+            msg += `Detalhes do bolo - ${formattedPrice}\n`;
             if (item.type === 'Bolo de Andar') msg += `Tipo: ${item.title}\n`;
             msg += `Tamanho: ${item.tamanho}\n`;
             msg += `Massa: ${item.massa}\n`;
@@ -753,12 +760,12 @@ function generateOrderMessage(ignoreValidation = false) {
                 msg += `\n`;
             }
         } else if ((item.type === 'Bolo Personalizado' || item.type === 'Bolo de Andar') && hasCustomCake) {
-            secondaryCakes += `${item.type} (Adicional)\n`;
+            secondaryCakes += `${item.type} (Adicional) - ${formattedPrice}\n`;
             secondaryCakes += `Tamanho: ${item.tamanho} | Massa: ${item.massa} | Recheio: ${item.recheio}\n`;
             if (item.adicionais) secondaryCakes += `Adicionais: ${item.adicionais}\n`;
             if (item.obs) secondaryCakes += `Obs: ${item.obs}\n\n`;
         } else {
-            docesItems += `${item.title}\n`;
+            docesItems += `${item.title} - ${formattedPrice}\n`;
             docesItems += `${item.details}\n\n`;
         }
     });
